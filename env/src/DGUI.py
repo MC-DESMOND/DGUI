@@ -1,5 +1,6 @@
 from tkinter import *
 import math
+import time
 """
 
                                          
@@ -13,6 +14,22 @@ import math
  / _` | __| __| '__| | '_ \| | | | __/ _ \/ __|
 | (_| | |_| |_| |  | | |_) | |_| | ||  __/\__ \    
  \__,_|\__|\__|_|  |_|_.__/ \__,_|\__\___||___/   
+
+ 
+
+ _     ___ _   _ _____    _    ____  
+| |   |_ _| \ | | ____|  / \  |  _ \ 
+| |    | ||  \| |  _|   / _ \ | |_) |
+| |___ | || |\  | |___ / ___ \|  _ < 
+|_____|___|_| \_|_____/_/   \_\_| \_\|
+                                     
+  ____ ____      _    ____ ___ _____ _   _ _____ 
+ / ___|  _ \    / \  |  _ \_ _| ____| \ | |_   _|
+| |  _| |_) |  / _ \ | | | | ||  _| |  \| | | |  
+| |_| |  _ <  / ___ \| |_| | || |___| |\  | | |_ 
+ \____|_| \_\/_/   \_\____/___|_____|_| \_| |_( )
+                                              |/ 
+
 
  ___ _   _       ______   _______ _   _  ___  _   _ 
 |_ _| \ | |     |  _ \ \ / /_   _| | | |/ _ \| \ | |
@@ -32,6 +49,8 @@ import math
 
 
 """
+
+
 
 
 class Gui(Tk):
@@ -133,21 +152,34 @@ class Gui(Tk):
         for i in result:
             print(i)
         print(len(result))
-        linelist = []
+        linelist1 = []
+        linelist2 = []
         colorList = []
+        for Iter,i in enumerate(result):
+            xer = x+Iter#+Iter
+            colorList.append(i)
+            linelist2.append(self.body.create_line(xer,0,xer+angle,self.height,fill=i,width=1))
+            # self.root.update()
         result.reverse()
         for Iter,i in enumerate(result):
             
-            xer = (x-len(result))+Iter
+            xer = (x-(len(result)))+Iter
             colorList.append(i)
-            linelist.append(self.body.create_line(xer,0,xer,self.height,fill=i,width=1))
-        result.reverse()
-        for Iter,i in enumerate(result):
-            xer = x+Iter
-            colorList.append(i)
-            linelist.append(self.body.create_line(xer,0,xer,self.height,fill=i,width=1))
-            # self.root.update()
+            linelist1.append(self.body.create_line(xer,0,xer+angle,self.height,fill=i,width=1))
+        
         self.root.update()
+        return linelist1 , linelist2
+    
+    def Move_linesTo(self,lineslist,x,y):
+        lines1, lines2 = lineslist
+        lines1 = [i for i in lines1]
+        lines1.reverse()
+        for i,ob in enumerate(lines1):
+            self.body.moveto(ob,x-i,y)
+        for i,ob in enumerate(lines2):
+            self.body.moveto(ob,x+i,y)
+        self.root.update()
+
 
 
             
@@ -155,12 +187,22 @@ class Gui(Tk):
 
 def test():
     root = Tk()
-    gui = Gui(root,width=500,height=int(root.winfo_screenheight()))
+    gui = Gui(root,width=500,height=500)
     gui.pack(fill=BOTH,expand=True)
     gui.set_bg(color='#000000')
-    gui.linear_blured_color(250,0,100,'#00ff00')
-    gui.linear_blured_color(500+150,0,100,'#ff0000')
-    gui.linear_blured_color(500+550,0,100,'#0000ff')
+    lines = gui.linear_blured_color(500,0,150,'#00aaaa' )
+    length = 800
+    gui.root.wm_attributes('-topmost',1)
+    # length = int(gui.root.winfo_screenwidth())
+    while True:
+        for i in range(length):
+            gui.Move_linesTo(lines,i,0)
+            time.sleep(0.0000001)
+        
+        for i in range(length):
+            gui.Move_linesTo(lines,(length)-i,0)
+            # time.sleep(0.0000001)
+    
     root.mainloop()
 
 
